@@ -95,13 +95,28 @@ st.sidebar.markdown("""
 - Reach towards your toes
 """)
 
-# File uploader
-uploaded_file = st.file_uploader("Choose an image...", type=['jpg', 'jpeg', 'png'])
+# Choose input method
+input_method = st.radio("Choose input method:", ["📷 Take Photo with Webcam", "📁 Upload Image"])
 
-if uploaded_file is not None:
-    # Read image
-    image = Image.open(uploaded_file)
-    image_np = np.array(image)
+image_np = None
+
+if input_method == "📷 Take Photo with Webcam":
+    camera_photo = st.camera_input("Take a picture")
+    
+    if camera_photo is not None:
+        # Read image from camera
+        image = Image.open(camera_photo)
+        image_np = np.array(image)
+else:
+    # File uploader
+    uploaded_file = st.file_uploader("Choose an image...", type=['jpg', 'jpeg', 'png'])
+    
+    if uploaded_file is not None:
+        # Read image
+        image = Image.open(uploaded_file)
+        image_np = np.array(image)
+
+if image_np is not None:
     image_rgb = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
     
     # Get image dimensions
